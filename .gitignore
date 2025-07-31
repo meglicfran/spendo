@@ -1,3 +1,4 @@
 todo.md
 /files
 *.env
+node_modules/

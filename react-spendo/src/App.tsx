@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Transactions from "./components/Transactions";
 import TransactionSummary from "./components/TransacionSummary";
+import TopTransactions from "./components/TopTransactions";
 
 const BASE_URL = "http://localhost:3000";
 const ACCOUNT_ID = "166ed110-b84e-4026-ab83-cc5e6112afda";
@@ -53,6 +54,7 @@ function App() {
 			<button onClick={sendRequest}>Refresh</button>
 			<div className="app-container">
 				<TransactionSummary transactions={transactions} />
+				<TopTransactions transactions={transactions} count={5} />
 				<Transactions transactions={transactions} />
 			</div>
 		</>

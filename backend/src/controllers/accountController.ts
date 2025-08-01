@@ -1,9 +1,23 @@
 import { Request, Response } from "express";
 import { config } from "../config/config";
+import { AccountCacheStrategy, FileAccountCache } from "../cache/FileAccountCache";
+import { isToday } from "../utils/utils";
+import path from "path";
+
+const accountMetadataPath = path.join(__dirname, "../__cache__/accountMetadata.json");
 
 export const getAccountMetadata = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
+		const cache: AccountCacheStrategy = new FileAccountCache(accountMetadataPath);
+		const accountMetadataCache = cache.getAccountMetadata(id);
+		const cache_date = new Date(accountMetadataCache.cache_saved);
+		if (accountMetadataCache !== undefined && isToday(cache_date)) {
+			console.log("Cache saved today. Return cached value");
+			return res.status(200).json(accountMetadataCache);
+		}
+		console.log("Cache empty or not saved today. Call Nordigen API");
+
 		const accountMetadataUrl = `/api/v2/accounts/${id}/`;
 		const options: RequestInit = {
 			method: "GET",
@@ -18,6 +32,7 @@ export const getAccountMetadata = async (req: Request, res: Response) => {
 		}
 
 		const data = await response.json();
+		cache.setAccountMetadata(id, data);
 		return res.status(200).json(data);
 	} catch (err) {
 		console.error(err);

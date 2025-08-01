@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Transactions from "./components/Transactions";
+import TransactionSummary from "./components/TransacionSummary";
 
 const BASE_URL = "http://localhost:3000";
 const ACCOUNT_ID = "166ed110-b84e-4026-ab83-cc5e6112afda";
@@ -35,7 +36,7 @@ function App() {
 				transactionId: value.transactionId,
 				date: value.bookingDate,
 				description: value.remittanceInformationUnstructured,
-				amount: value.transactionAmount.amount,
+				amount: Number(value.transactionAmount.amount),
 				currency: value.transactionAmount.currency,
 			};
 			return transaction;
@@ -50,7 +51,8 @@ function App() {
 	return (
 		<>
 			<button onClick={sendRequest}>Refresh</button>
-			<div>
+			<div className="app-container">
+				<TransactionSummary transactions={transactions} />
 				<Transactions transactions={transactions} />
 			</div>
 		</>

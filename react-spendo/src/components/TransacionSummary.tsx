@@ -6,18 +6,16 @@ interface SummaryProp {
 
 function TransactionSummary({ transactions }: SummaryProp) {
 	const getIncome = (digits: number) => {
-		var income = 0;
-		transactions.forEach((transaction) => {
-			income += transaction.amount > 0 ? transaction.amount : 0;
-		});
+		const income = transactions.reduce((sum, t) => {
+			return t.amount > 0 ? sum + t.amount : sum;
+		}, 0);
 		return Number(income.toFixed(digits));
 	};
 
 	const getExpenses = (digits: number) => {
-		var expenses = 0;
-		transactions.forEach((transaction) => {
-			expenses += transaction.amount < 0 ? transaction.amount : 0;
-		});
+		const expenses = transactions.reduce((sum, t) => {
+			return t.amount < 0 ? sum + t.amount : sum;
+		}, 0);
 		return Number(expenses.toFixed(digits));
 	};
 

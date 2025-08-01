@@ -2,20 +2,26 @@ export interface AccountMetadataRecord {
 	cache_saved: string;
 }
 
+export interface AccountTransactionsRecord {
+	cache_saved: string;
+}
+
 export interface AccountCacheStrategy {
 	getAccountMetadata(accountId: string): AccountMetadataRecord;
 	setAccountMetadata(accountId: string, metadata: any): void;
-	getAccountTransactions(accountId: string, date_from: Date, date_to: Date): {};
-	setAccountTransactions(accountId: string, date_from: Date, date_to: Date, transactions: {}): void;
+	getAccountTransactions(accountId: string, date_from: string, date_to: string): AccountTransactionsRecord;
+	setAccountTransactions(accountId: string, date_from: string, date_to: string, transactions: {}): void;
 }
 
 import fs from "fs";
 
 export class FileAccountCache implements AccountCacheStrategy {
 	private accountMetadataPath: string;
+	private accountTransactionsPath: string;
 
-	constructor(filePath: string) {
-		this.accountMetadataPath = filePath;
+	constructor(accountMetadataPath: string, accountTransactionsPath: string) {
+		this.accountMetadataPath = accountMetadataPath;
+		this.accountTransactionsPath = accountTransactionsPath;
 	}
 
 	getAccountMetadata(accountId: string): AccountMetadataRecord {
@@ -30,11 +36,17 @@ export class FileAccountCache implements AccountCacheStrategy {
 		accountMetadata.set(accountId, accountRecord);
 		this.saveMapToFile(this.accountMetadataPath, accountMetadata);
 	}
-	getAccountTransactions(accountId: string, date_from: Date, date_to: Date): {} {
-		throw new Error("Method not implemented.");
+	getAccountTransactions(accountId: string, date_from: string, date_to: string): AccountTransactionsRecord {
+		const accountTransactions = this.getMapFromFile(this.accountTransactionsPath);
+		return accountTransactions.get(JSON.stringify({ accountId, date_from, date_to }));
 	}
-	setAccountTransactions(accountId: string, date_from: Date, date_to: Date, transactions: {}): void {
-		throw new Error("Method not implemented.");
+
+	setAccountTransactions(accountId: string, date_from: string, date_to: string, transactions: any): void {
+		const today = new Date();
+		const transactionsRecord = { ...transactions, cache_saved: today };
+		const accountTransactions = this.getMapFromFile(this.accountTransactionsPath);
+		accountTransactions.set(JSON.stringify({ accountId, date_from, date_to }), transactionsRecord);
+		this.saveMapToFile(this.accountTransactionsPath, accountTransactions);
 	}
 
 	private getMapFromFile(filePath: string) {

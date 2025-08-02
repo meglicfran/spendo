@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Transaction } from "../App";
 
 interface TransactionsProp {
@@ -5,7 +6,25 @@ interface TransactionsProp {
 }
 
 function Transactions({ transactions }: TransactionsProp) {
-	const transactionRows = transactions.map((item) => {
+	const [sortKey, updateSortKey] = useState("date");
+
+	const sortFunc = (ta: Transaction, tb: Transaction) => {
+		const dateA = new Date(ta.date);
+		const dateB = new Date(tb.date);
+		if (sortKey === "date") {
+			return dateB.getTime() - dateA.getTime();
+		} else if (sortKey === "dateReverse") {
+			return dateA.getTime() - dateB.getTime();
+		} else if (sortKey === "amount") {
+			return tb.amount - ta.amount;
+		} else if (sortKey === "amountReverse") {
+			return ta.amount - tb.amount;
+		} else {
+			return tb.amount - ta.amount;
+		}
+	};
+
+	const transactionRows = [...transactions].sort(sortFunc).map((item) => {
 		return (
 			<tr key={item.transactionId}>
 				<td>{item.date}</td>
@@ -16,15 +35,35 @@ function Transactions({ transactions }: TransactionsProp) {
 		);
 	});
 
+	const sortByAmount = () => {
+		if (sortKey !== "amount") {
+			updateSortKey("amount");
+			return;
+		}
+		updateSortKey("amountReverse");
+	};
+
+	const sortByDate = () => {
+		if (sortKey !== "date") {
+			updateSortKey("date");
+			return;
+		}
+		updateSortKey("dateReverse");
+	};
+
 	return (
 		<>
 			<div className="transactions-container">
 				<table className="transactions">
 					<thead>
 						<tr>
-							<th>Date</th>
+							<th onClick={sortByDate} className="hover">
+								Date
+							</th>
 							<th>Description</th>
-							<th>Amount</th>
+							<th onClick={sortByAmount} className="hover">
+								Amount
+							</th>
 							<th>Currency</th>
 						</tr>
 					</thead>

@@ -49,3 +49,7 @@ td {
 	border: 1px solid black;
 	padding: 5px;
 }
+
+.hover:hover {
+	cursor: pointer;
+}

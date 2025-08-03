@@ -13,8 +13,7 @@ export const getAccountMetadata = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
 		const accountMetadataCache = accountCache.getAccountMetadata(id);
-		const cache_date = new Date(accountMetadataCache.cache_saved);
-		if (accountMetadataCache !== undefined && isToday(cache_date)) {
+		if (accountMetadataCache !== undefined && isToday(new Date(accountMetadataCache.cache_saved))) {
 			console.log("Cache saved today. Return cached value");
 			return res.status(200).json(accountMetadataCache);
 		}
@@ -43,20 +42,12 @@ export const getAccountMetadata = async (req: Request, res: Response) => {
 };
 
 export const getAccountTransactions = async (req: Request, res: Response) => {
-	/*
-	const { id } = req.params;
-	const date_from = req.query.date_from as string;
-	const date_to = req.query.date_to as string;
-	accountCache.getAccountTransactions(id, date_from, date_to);
-	res.send("ok");
-	*/
 	try {
 		const { id } = req.params;
 		const date_from = req.query.date_from as string;
 		const date_to = req.query.date_to as string;
 		const accountTransactionsCache = accountCache.getAccountTransactions(id, date_from, date_to);
-		const cache_date = new Date(accountTransactionsCache.cache_saved);
-		if (accountTransactionsCache !== undefined && isToday(cache_date)) {
+		if (accountTransactionsCache !== undefined && isToday(new Date(accountTransactionsCache.cache_saved))) {
 			console.log("Cache saved today. Return cached value");
 			return res.status(200).json(accountTransactionsCache);
 		}

@@ -1,6 +1,7 @@
 import express from "express";
 import accountsRoutes from "./routes/accounts";
 import { logger } from "./middleware/logger";
+import userRoutes from "./routes/users";
 const cors = require("cors");
 
 const app = express();
@@ -18,4 +19,5 @@ app.get("/", (req, res) => {
 	res.send("Hello from TypeScript backend!");
 });
 
-app.use("/api/v2/accounts", accountsRoutes);
+app.use("/accounts", accountsRoutes);
+app.use("/users", userRoutes);

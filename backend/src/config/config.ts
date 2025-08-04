@@ -12,4 +12,14 @@ export const config = {
 		(() => {
 			throw new Error("BASE_URL not set");
 		})(),
+	DB_PASS:
+		process.env.DB_PASS ??
+		(() => {
+			throw new Error("DB_PASS not set");
+		})(),
+	DB_USER:
+		process.env.DB_USER ??
+		(() => {
+			throw new Error("DB_USER not set");
+		})(),
 };

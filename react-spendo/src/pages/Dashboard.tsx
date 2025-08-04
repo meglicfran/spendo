@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import Transactions from "./components/Transactions";
-import TransactionSummary from "./components/TransacionSummary";
-import TopTransactions from "./components/TopTransactions";
+import Transactions from "../components/Transactions";
+import TransactionSummary from "../components/TransacionSummary";
+import TopTransactions from "../components/TopTransactions";
 
 const BASE_URL = "http://localhost:3000";
 const ACCOUNT_ID = "166ed110-b84e-4026-ab83-cc5e6112afda";
@@ -14,7 +14,7 @@ export interface Transaction {
 	currency: string;
 }
 
-function App() {
+function Dashboard() {
 	const dateFrom = useRef<HTMLInputElement>(null);
 	const dateTo = useRef<HTMLInputElement>(null);
 
@@ -25,7 +25,7 @@ function App() {
 		const date_from = dateRange[0];
 		const date_to = dateRange[1];
 
-		const accountTransactionsUrl = `/api/v2/accounts/${ACCOUNT_ID}/transactions/?date_from=${date_from}&date_to=${date_to}`;
+		const accountTransactionsUrl = `/accounts/${ACCOUNT_ID}/transactions/?date_from=${date_from}&date_to=${date_to}`;
 		const options: RequestInit = {
 			method: "GET",
 		};
@@ -88,4 +88,4 @@ function App() {
 	);
 }
 
-export default App;
+export default Dashboard;

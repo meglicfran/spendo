@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Transaction } from "../App";
+import type { Transaction } from "../pages/Dashboard";
 
 interface TransactionsProp {
 	transactions: Transaction[];

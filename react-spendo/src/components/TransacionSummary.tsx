@@ -1,4 +1,4 @@
-import type { Transaction } from "../App";
+import type { Transaction } from "../pages/Dashboard";
 
 interface SummaryProp {
 	transactions: Transaction[];

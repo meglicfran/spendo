@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import AccountList from "../components/AccountList";
 
-const USER_ID = "2";
 const BASE_URL = "http://localhost:3000";
 
 function AccountsPage() {
 	const [accounts, updateAccounts] = useState([]);
 
 	const fetchAccounts = async () => {
-		const getAccountsUrl = `/users/accounts/${USER_ID}`;
+		const getAccountsUrl = `/users/accounts`;
 		const options: RequestInit = {
 			method: "GET",
+			credentials: "include",
 		};
 		const response = await fetch(BASE_URL + getAccountsUrl, options);
 		if (!response.ok) {

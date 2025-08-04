@@ -5,11 +5,16 @@ import "./index.css";
 import Dashboard from "./pages/Dashboard.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import AccountsPage from "./pages/AccountsPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 
 const router = createBrowserRouter([
 	{
-		path: "/",
+		path: "/account/:accountId",
 		element: <Dashboard />,
+	},
+	{
+		path: "/login",
+		element: <LoginPage />,
 	},
 	{
 		path: "/register",

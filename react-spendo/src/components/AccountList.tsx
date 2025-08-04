@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 interface AccountsProp {
 	accounts: {
 		accountid: string;
@@ -7,10 +9,19 @@ interface AccountsProp {
 }
 
 function AccountList({ accounts }: AccountsProp) {
+	const navigate = useNavigate();
+
+	const accountClicked = (accountId: string) => {
+		navigate("/account/" + accountId);
+	};
+
 	const accountRows = [...accounts].map((item, idx) => (
 		<tr
 			key={item.accountid}
 			className={`border-t border-gray-200 ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-blue-50`}
+			onClick={() => {
+				accountClicked(item.accountid);
+			}}
 		>
 			<td className="px-4 py-3 text-sm text-gray-800">{item.accountid}</td>
 			<td className="px-4 py-3 text-sm text-gray-800">{item.iban}</td>

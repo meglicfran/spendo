@@ -17,7 +17,7 @@ userRoutes.post("/post", addUser);
 userRoutes.delete("/delete/:userId", deleteUser);
 userRoutes.put("/put/:userId", updateUser);
 userRoutes.post("/login", userLogin);
-userRoutes.get("/accounts/:userId", getUserAccounts);
+userRoutes.get("/accounts", getUserAccounts);
 userRoutes.post("/accounts", addUserAccount);
 userRoutes.delete("/accounts", deleteUserAccount);
 

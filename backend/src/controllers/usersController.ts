@@ -14,15 +14,17 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const addUser = async (req: Request, res: Response) => {
 	try {
+		if ((req.session as any).user !== undefined) return res.status(200).send("Already logged in");
 		const { username, password } = req.body;
 		if (username === undefined || password === undefined)
 			return res.status(400).send("Missing username or password");
 
-		const query = await client.query(
-			`INSERT INTO users (username, password) VALUES ('${username}', '${password}');`
-		);
-		console.log(query.rows);
-		res.status(200).send("User added");
+		const query = await client.query(`INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`, [
+			username,
+			password,
+		]);
+		(req.session as any).user = query.rows[0].userid;
+		res.status(200).send(query.rows[0]);
 	} catch (error) {
 		console.error("Query error", error);
 		res.status(500).send(error);
@@ -62,12 +64,14 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const userLogin = async (req: Request, res: Response) => {
 	try {
+		if ((req.session as any).user !== undefined) return res.status(200).send("Already logged in");
 		const { username, password } = req.body;
 		if (username === undefined || password === undefined)
 			return res.status(400).send("Missing username or password");
 
 		const query = await client.query(`Select * from users where username = '${username}'`);
 		if (query.rowCount === 1 && query.rows[0].password === password) {
+			(req.session as any).user = query.rows[0].userid;
 			res.status(200).send("Login successful");
 		} else {
 			res.status(401).send("Wrong username or password");
@@ -80,8 +84,8 @@ export const userLogin = async (req: Request, res: Response) => {
 
 export const getUserAccounts = async (req: Request, res: Response) => {
 	try {
-		const { userId } = req.params;
-		if (userId === undefined) return res.status(400).send("Missing userId.");
+		if ((req.session as any).user === undefined) return res.status(401).send("Not logged in.");
+		const userId = (req.session as any).user;
 
 		const query = await client.query(`select accountId, iban, institutionId from accounts where userId=${userId}`);
 		console.log(query.rows);

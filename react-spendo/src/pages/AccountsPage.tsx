@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AccountList from "../components/AccountList";
+import Nav from "../components/Nav";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -26,9 +27,12 @@ function AccountsPage() {
 	}, []);
 
 	return (
-		<div className="max-w-7xl mx-auto p-6 space-y-6">
-			<AccountList accounts={accounts} />
-		</div>
+		<>
+			<Nav />
+			<div className="max-w-7xl mx-auto p-6 space-y-6">
+				<AccountList accounts={accounts} />
+			</div>
+		</>
 	);
 }
 

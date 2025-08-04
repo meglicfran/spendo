@@ -17,24 +17,32 @@ function TopTransactions({ transactions, count }: TransactionsProp) {
 		.slice(0, count);
 
 	return (
-		<div>
-			<h2>Top {count} Incomes</h2>
-			<ul>
-				{incomes.map((t) => (
-					<li key={t.transactionId}>
-						[{t.date}] {t.description}: +${t.amount.toFixed(2)}
-					</li>
-				))}
-			</ul>
+		<div className="space-y-8">
+			<section>
+				<h2 className="text-xl font-semibold text-gray-800 mb-4">Top {count} Incomes</h2>
+				<ul className="space-y-2 list-disc list-inside text-gray-700">
+					{incomes.map((t) => (
+						<li key={t.transactionId} className="p-2 rounded bg-green-50 border border-green-200">
+							<span className="font-mono text-sm text-gray-500 mr-2">[{t.date}]</span>
+							<span>{t.description}</span>
+							<span className="font-semibold text-green-700 ml-2">+${t.amount.toFixed(2)}</span>
+						</li>
+					))}
+				</ul>
+			</section>
 
-			<h2>Top {count} Expenses</h2>
-			<ul>
-				{expenses.map((t) => (
-					<li key={t.transactionId}>
-						[{t.date}] {t.description}: -${Math.abs(t.amount).toFixed(2)}
-					</li>
-				))}
-			</ul>
+			<section>
+				<h2 className="text-xl font-semibold text-gray-800 mb-4">Top {count} Expenses</h2>
+				<ul className="space-y-2 list-disc list-inside text-gray-700">
+					{expenses.map((t) => (
+						<li key={t.transactionId} className="p-2 rounded bg-red-50 border border-red-200">
+							<span className="font-mono text-sm text-gray-500 mr-2">[{t.date}]</span>
+							<span>{t.description}</span>
+							<span className="font-semibold text-red-700 ml-2">-${Math.abs(t.amount).toFixed(2)}</span>
+						</li>
+					))}
+				</ul>
+			</section>
 		</div>
 	);
 }

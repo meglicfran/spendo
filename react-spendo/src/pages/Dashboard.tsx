@@ -69,7 +69,59 @@ function Dashboard() {
 	};
 
 	return (
-		<>
+		<div className="space-y-10 p-6 max-w-7xl mx-auto">
+			{/* Date Range Selector */}
+			<div className="flex flex-wrap items-end gap-4 bg-white p-4 rounded-lg shadow border border-gray-200">
+				<div className="flex flex-col">
+					<label htmlFor="dateFrom" className="text-sm font-medium text-gray-700">
+						Date From:
+					</label>
+					<input
+						type="date"
+						id="dateFrom"
+						name="dateFrom"
+						ref={dateFrom}
+						className="mt-1 border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					/>
+				</div>
+
+				<div className="flex flex-col">
+					<label htmlFor="dateTo" className="text-sm font-medium text-gray-700">
+						Date To:
+					</label>
+					<input
+						type="date"
+						id="dateTo"
+						name="dateTo"
+						ref={dateTo}
+						className="mt-1 border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					/>
+				</div>
+
+				<button
+					onClick={refreshHandler}
+					className="h-10 px-5 mt-5 bg-blue-600 text-white text-sm font-medium rounded shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+				>
+					Refresh
+				</button>
+			</div>
+
+			{/* Dashboard Content */}
+			<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+				<div className="lg:col-span-1">
+					<TransactionSummary transactions={transactions} />
+				</div>
+				<div className="lg:col-span-2 space-y-8">
+					<TopTransactions transactions={transactions} count={5} />
+					<Transactions transactions={transactions} />
+				</div>
+			</div>
+		</div>
+	);
+}
+
+/*
+<>
 			<div className="date-container">
 				<label>Date From:</label>
 				<input type="date" id="dateFrom" name="dateFrom" ref={dateFrom} />
@@ -85,7 +137,6 @@ function Dashboard() {
 				<Transactions transactions={transactions} />
 			</div>
 		</>
-	);
-}
+*/
 
 export default Dashboard;

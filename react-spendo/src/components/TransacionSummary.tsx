@@ -30,7 +30,33 @@ function TransactionSummary({ transactions }: SummaryProp) {
 	};
 
 	return (
-		<div>
+		<div className="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
+			<h1 className="text-2xl font-bold text-gray-900 mb-4">Transaction Summary:</h1>
+			<div className="space-y-3 text-gray-700 text-lg">
+				<h2 className="flex justify-between">
+					<span>Income:</span>
+					<span className="font-semibold text-green-600">
+						{getIncome(2)} {getCurrency()}
+					</span>
+				</h2>
+				<h2 className="flex justify-between">
+					<span>Expenses:</span>
+					<span className="font-semibold text-red-600">
+						{getExpenses(2)} {getCurrency()}
+					</span>
+				</h2>
+				<h2 className="flex justify-between border-t pt-3 mt-3 font-semibold text-gray-900 text-xl">
+					<span>Net:</span>
+					<span>
+						{getNet(2)} {getCurrency()}
+					</span>
+				</h2>
+			</div>
+		</div>
+	);
+}
+/*
+<div>
 			<h1>Transaction Summary:</h1>
 			<h2>
 				Income: {getIncome(2)} {getCurrency()}
@@ -42,7 +68,5 @@ function TransactionSummary({ transactions }: SummaryProp) {
 				Net: {getNet(2)} {getCurrency()}
 			</h2>
 		</div>
-	);
-}
-
+*/
 export default TransactionSummary;

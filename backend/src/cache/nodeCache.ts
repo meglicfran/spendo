@@ -19,6 +19,10 @@ export const cacheHandler = (req: Request, res: Response, next: NextFunction) =>
 	}
 
 	const key = req.originalUrl;
+	if (key === "/users/accounts") {
+		console.error("Cannot cache /users/accounts");
+		return next();
+	}
 	const cacheResponse = cache.get(key);
 
 	if (cacheResponse) {

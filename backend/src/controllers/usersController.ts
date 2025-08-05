@@ -98,9 +98,13 @@ export const getUserAccounts = async (req: Request, res: Response) => {
 
 export const addUserAccount = async (req: Request, res: Response) => {
 	try {
-		const { accountId, userId, iban, institutionId } = req.body;
-		if (accountId === undefined || userId === undefined || iban === undefined || institutionId == undefined)
+		if ((req.session as any).user === undefined) return res.status(401).send("Not logged in.");
+		const { accountId, iban, institutionId } = req.body;
+		const userId = (req.session as any).user;
+		if (accountId === undefined || userId === undefined || iban === undefined || institutionId == undefined) {
+			console.log(accountId, iban, institutionId, userId);
 			return res.status(400).send("Invalid request body");
+		}
 		const query = await client.query(
 			`INSERT INTO accounts (accountID, userId, IBAN, institutionID) VALUES ('${accountId}', ${userId}, '${iban}', '${institutionId}');`
 		);

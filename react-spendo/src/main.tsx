@@ -6,8 +6,15 @@ import Dashboard from "./pages/Dashboard.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import AccountsPage from "./pages/AccountsPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import Nav from "./components/Nav.tsx";
+import AddAccountPage from "./pages/AddAccountPage.tsx";
+import AccountsAddedPage from "./pages/AccountsAddedPage.tsx";
 
 const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <Nav />,
+	},
 	{
 		path: "/account/:accountId",
 		element: <Dashboard />,
@@ -23,6 +30,14 @@ const router = createBrowserRouter([
 	{
 		path: "/accounts",
 		element: <AccountsPage />,
+	},
+	{
+		path: "/add",
+		element: <AddAccountPage />,
+	},
+	{
+		path: "/added",
+		element: <AccountsAddedPage />,
 	},
 ]);
 

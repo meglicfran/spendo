@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
+export interface Account {
+	accountid: string;
+	iban: string;
+	institutionid: string;
+}
+
 interface AccountsProp {
-	accounts: {
-		accountid: string;
-		iban: string;
-		institutionid: string;
-	}[];
+	accounts: Account[];
 }
 
 function AccountList({ accounts }: AccountsProp) {

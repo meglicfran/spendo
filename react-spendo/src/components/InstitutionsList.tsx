@@ -1,13 +1,9 @@
-import { useNavigate } from "react-router-dom";
-
 interface Prop {
 	institutions: any[];
 }
 const BASE_URL = "http://localhost:3000";
 
 function InstitutionsList({ institutions }: Prop) {
-	const navigate = useNavigate();
-
 	const handleClick = async (institution: any) => {
 		console.log(institution);
 		const createRequisitionUrl = "/requisitions";

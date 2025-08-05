@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import type { Account } from "../components/AccountList";
 import Nav from "../components/Nav";
 import AccountList from "../components/AccountList";
@@ -78,6 +78,3 @@ function AccountsAddedPage() {
 }
 
 export default AccountsAddedPage;
-/*
-refid: 02e0f17c-91bd-4d89-979c-ce5a1a1a784b
-*/

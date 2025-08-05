@@ -3,6 +3,8 @@ import accountsRoutes from "./routes/accounts";
 import { logger } from "./middleware/logger";
 import userRoutes from "./routes/users";
 import session from "express-session";
+import institutionsRouter from "./routes/institutions";
+import { cacheHandler } from "./cache/nodeCache";
 
 const cors = require("cors");
 
@@ -28,6 +30,7 @@ app.use(
 		},
 	})
 );
+app.use(cacheHandler);
 
 app.get("/", (req, res) => {
 	res.send("Hello from TypeScript backend!");
@@ -35,6 +38,7 @@ app.get("/", (req, res) => {
 
 app.use("/accounts", accountsRoutes);
 app.use("/users", userRoutes);
+app.use("/institutions", institutionsRouter);
 
 app.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}`);

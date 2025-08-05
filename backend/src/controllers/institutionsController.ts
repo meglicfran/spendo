@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import client from "../database/db";
 import { config } from "../config/config";
 
 export const getInstitutionsByCountry = async (req: Request, res: Response) => {

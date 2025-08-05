@@ -26,7 +26,6 @@ export const cacheHandler = (req: Request, res: Response, next: NextFunction) =>
 		res.send(cacheResponse);
 	} else {
 		console.log(`Cache miss for ${key}`);
-		console.log(cache.keys());
 		const originalJson = res.json.bind(res);
 		res.json = (body: any) => {
 			cache.set(key, body);

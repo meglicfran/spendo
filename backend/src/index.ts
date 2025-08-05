@@ -5,6 +5,7 @@ import userRoutes from "./routes/users";
 import session from "express-session";
 import institutionsRouter from "./routes/institutions";
 import { cacheHandler } from "./cache/nodeCache";
+import requisitionsRouter from "./routes/requisitions";
 
 const cors = require("cors");
 
@@ -39,6 +40,7 @@ app.get("/", (req, res) => {
 app.use("/accounts", accountsRoutes);
 app.use("/users", userRoutes);
 app.use("/institutions", institutionsRouter);
+app.use("/requisitions", requisitionsRouter);
 
 app.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}`);

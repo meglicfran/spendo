@@ -120,13 +120,15 @@ export const addUserAccount = async (req: Request, res: Response) => {
 
 export const deleteUserAccount = async (req: Request, res: Response) => {
 	try {
-		const { accountId, userId } = req.body;
-		if (accountId === undefined || userId === undefined) return res.status(400).send("Invalid request body");
+		if ((req.session as any).user === undefined) return res.status(401).send("Not logged in.");
+		const userId = (req.session as any).user;
+		const { accountId } = req.body;
+		if (accountId === undefined || userId === undefined) return res.status(400).send("Invalid request");
 		const query = await client.query(`Delete from accounts where accountId = $1 and userId = $2;`, [
 			accountId,
 			userId,
 		]);
-		res.status(200).send("Account deleted");
+		res.status(200).send(`Account ${accountId} deleted`);
 	} catch (err) {
 		console.error(err);
 		return res.status(500).send("Internal server error");

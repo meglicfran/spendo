@@ -32,8 +32,11 @@ export const cacheHandler = (req: Request, res: Response, next: NextFunction) =>
 		console.log(`Cache miss for ${key}`);
 		const originalJson = res.json.bind(res);
 		res.json = (body: any) => {
-			cache.set(key, body);
-			cache.save();
+			if (res.statusCode === 200) {
+				console.log(`Cache saved for ${key}`);
+				cache.set(key, body);
+				cache.save();
+			}
 			return originalJson(body);
 		};
 		next();

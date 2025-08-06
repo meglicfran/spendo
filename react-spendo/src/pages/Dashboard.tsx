@@ -4,8 +4,7 @@ import TransactionSummary from "../components/TransacionSummary";
 import TopTransactions from "../components/TopTransactions";
 import { useParams } from "react-router-dom";
 import Nav from "../components/Nav";
-
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "../main";
 
 export interface Transaction {
 	transactionId: string;

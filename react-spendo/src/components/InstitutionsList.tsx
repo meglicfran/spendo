@@ -1,7 +1,8 @@
+import { BASE_URL } from "../main";
+
 interface Prop {
 	institutions: any[];
 }
-const BASE_URL = "http://localhost:3000";
 
 function InstitutionsList({ institutions }: Prop) {
 	const handleClick = async (institution: any) => {

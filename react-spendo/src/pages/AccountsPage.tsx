@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import AccountList from "../components/AccountList";
 import Nav from "../components/Nav";
 import { Link } from "react-router-dom";
-
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "../main";
 
 function AccountsPage() {
 	const [accounts, updateAccounts] = useState([]);

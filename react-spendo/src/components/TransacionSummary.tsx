@@ -55,18 +55,4 @@ function TransactionSummary({ transactions }: SummaryProp) {
 		</div>
 	);
 }
-/*
-<div>
-			<h1>Transaction Summary:</h1>
-			<h2>
-				Income: {getIncome(2)} {getCurrency()}
-			</h2>
-			<h2>
-				Expenses: {getExpenses(2)} {getCurrency()}
-			</h2>
-			<h2>
-				Net: {getNet(2)} {getCurrency()}
-			</h2>
-		</div>
-*/
 export default TransactionSummary;

@@ -3,8 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import type { Account } from "../components/AccountList";
 import Nav from "../components/Nav";
 import AccountList from "../components/AccountList";
-
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "../main";
 
 function AccountsAddedPage() {
 	const [searchParams] = useSearchParams();

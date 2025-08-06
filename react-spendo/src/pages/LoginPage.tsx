@@ -1,13 +1,12 @@
 import React, { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
+import { BASE_URL } from "../main";
 
 interface FormData {
 	username: string;
 	password: string;
 }
-
-const BASE_URL = "http://localhost:3000";
 
 const LoginPage: React.FC = () => {
 	const navigate = useNavigate();

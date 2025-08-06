@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../main";
 
 export interface Account {
 	accountid: string;
@@ -17,6 +18,28 @@ function AccountList({ accounts }: AccountsProp) {
 		navigate("/account/" + accountId);
 	};
 
+	const handleDelete = async (accountId: string) => {
+		console.log(accountId);
+		const deleteAccountUrl = `/users/accounts`;
+		const options: RequestInit = {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				accountId: accountId,
+			}),
+		};
+		const response = await fetch(BASE_URL + deleteAccountUrl, options);
+		if (!response.ok) {
+			alert(`Error fetching account status = ${response.status}`);
+			return;
+		}
+		alert("account deleted");
+		navigate("/accounts");
+	};
+
 	const accountRows = [...accounts].map((item, idx) => (
 		<tr
 			key={item.accountid}
@@ -28,6 +51,17 @@ function AccountList({ accounts }: AccountsProp) {
 			<td className="px-4 py-3 text-sm text-gray-800">{item.accountid}</td>
 			<td className="px-4 py-3 text-sm text-gray-800">{item.iban}</td>
 			<td className="px-4 py-3 text-sm text-gray-800">{item.institutionid}</td>
+			<td className="px-4 py-3 text-sm text-gray-800">
+				<button
+					onClick={(e) => {
+						e.stopPropagation();
+						handleDelete(item.accountid);
+					}}
+					className="bg-red-600 text-white border border-red-700 rounded px-3 py-1 hover:bg-red-700 transition duration-200 cursor-pointer"
+				>
+					Delete
+				</button>
+			</td>
 		</tr>
 	));
 
@@ -41,6 +75,7 @@ function AccountList({ accounts }: AccountsProp) {
 							<th className="px-4 py-2 text-left">Account ID</th>
 							<th className="px-4 py-2 text-left">IBAN</th>
 							<th className="px-4 py-2 text-left">Institution ID</th>
+							<th className="px-4 py-2 text-left">Action</th>
 						</tr>
 					</thead>
 					<tbody>{accountRows}</tbody>

@@ -10,6 +10,8 @@ import Nav from "./components/Nav.tsx";
 import AddAccountPage from "./pages/AddAccountPage.tsx";
 import AccountsAddedPage from "./pages/AccountsAddedPage.tsx";
 
+export const BASE_URL = "http://localhost:3000";
+
 const router = createBrowserRouter([
 	{
 		path: "/",

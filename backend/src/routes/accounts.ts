@@ -3,7 +3,7 @@ import { getAccountMetadata, getAccountTransactions } from "../controllers/accou
 
 const accountsRoutes = express.Router();
 
-accountsRoutes.get("/:id", getAccountMetadata);
-accountsRoutes.get("/:id/transactions/", getAccountTransactions);
+accountsRoutes.get("/:accountId", getAccountMetadata);
+accountsRoutes.get("/:accountId/transactions/", getAccountTransactions);
 
 export default accountsRoutes;

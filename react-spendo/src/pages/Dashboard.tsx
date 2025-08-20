@@ -33,7 +33,7 @@ function Dashboard() {
 		};
 		const response = await fetch(BASE_URL + accountTransactionsUrl, options);
 		if (!response.ok) {
-			console.log(`Error fetching account status = ${response.status}`);
+			alert(`Error fetching account status = ${response.status}`);
 			return;
 		}
 

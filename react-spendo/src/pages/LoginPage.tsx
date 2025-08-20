@@ -19,8 +19,6 @@ const LoginPage: React.FC = () => {
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		// TODO: Add API call or validation logic
-		console.log("Logging in:", form);
 		const loginUrl = `/users/login`;
 		const options: RequestInit = {
 			method: "POST",
@@ -38,6 +36,7 @@ const LoginPage: React.FC = () => {
 			console.log(`Error fetching account status = ${response.status}`);
 			return;
 		} else {
+			localStorage.setItem("username", form.username);
 			navigate("/accounts");
 		}
 	};

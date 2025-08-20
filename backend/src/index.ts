@@ -22,6 +22,7 @@ app.use(express.json());
 app.use(logger);
 app.use(
 	session({
+		name: "sId",
 		secret: `idegas`,
 		saveUninitialized: false,
 		resave: false,

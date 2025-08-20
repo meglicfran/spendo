@@ -83,6 +83,19 @@ export const userLogin = async (req: Request, res: Response) => {
 	}
 };
 
+export const userLogout = async (req: Request, res: Response) => {
+	try {
+		if ((req.session as any).user === undefined) return res.status(401).send("Not logged in.");
+		res.clearCookie("sId", {
+			secure: false,
+		});
+		res.status(200).json({ message: "Logged out successfully" });
+	} catch (err) {
+		console.error(err);
+		return res.status(500).send("Internal server error");
+	}
+};
+
 export const getUserAccounts = async (req: Request, res: Response) => {
 	try {
 		if ((req.session as any).user === undefined) return res.status(401).send("Not logged in.");

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { config } from "../config/config";
-import { isToday } from "../utils/utils";
-import path from "path";
+import client from "../database/db";
 
 export const getAccountMetadata = async (req: Request, res: Response) => {
 	try {
@@ -26,9 +25,18 @@ export const getAccountMetadata = async (req: Request, res: Response) => {
 
 export const getAccountTransactions = async (req: Request, res: Response) => {
 	try {
+		if ((req.session as any).user === undefined) return res.status(401).json({ summary: "Unauthorized" });
+
+		const userId = (req.session as any).user;
 		const { accountId } = req.params;
 		const date_from = req.query.date_from as string;
 		const date_to = req.query.date_to as string;
+
+		const query = await client.query("select * from accounts where userId=$1 and accountId=$2", [
+			userId,
+			accountId,
+		]);
+		if (query.rowCount == 0) return res.status(401).json({ summary: "Unauthorized" });
 
 		const accountTransactionsUrl = `/api/v2/accounts/${accountId}/transactions/?date_from=${date_from}&date_to=${date_to}`;
 		const options: RequestInit = {

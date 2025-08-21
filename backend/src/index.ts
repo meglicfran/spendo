@@ -6,6 +6,7 @@ import session from "express-session";
 import institutionsRouter from "./routes/institutions";
 import { cacheHandler } from "./cache/nodeCache";
 import requisitionsRouter from "./routes/requisitions";
+import { sessionLogger } from "./middleware/sessionLogger";
 
 const cors = require("cors");
 
@@ -32,7 +33,6 @@ app.use(
 		},
 	})
 );
-app.use(cacheHandler);
 
 app.get("/", (req, res) => {
 	res.send("Hello from TypeScript backend!");

@@ -1,6 +1,7 @@
 import { FlatCache } from "flat-cache";
 import { NextFunction, Request, Response } from "express";
 import path from "path";
+import client from "../database/db";
 
 const cache = new FlatCache({
 	ttl: 60000 * 60 * 24, //24 hours
@@ -12,7 +13,7 @@ const cache = new FlatCache({
 
 cache.load("cache1");
 
-export const cacheHandler = (req: Request, res: Response, next: NextFunction) => {
+export const cacheHandler = async (req: Request, res: Response, next: NextFunction) => {
 	if (req.method !== "GET") {
 		console.error("Cannot cache non-GET requests!");
 		return next();
@@ -26,6 +27,17 @@ export const cacheHandler = (req: Request, res: Response, next: NextFunction) =>
 	const cacheResponse = cache.get(key);
 
 	if (cacheResponse) {
+		if ((req.session as any).user === undefined) return res.status(401).json({ summary: "Unauthorized" });
+
+		const userId = (req.session as any).user;
+		const { accountId } = req.params;
+		if (accountId !== undefined) {
+			const query = await client.query("select * from accounts where userId=$1 and accountId=$2", [
+				userId,
+				accountId,
+			]);
+			if (query.rowCount == 0) return res.status(401).json({ summary: "Unauthorized" });
+		}
 		console.log(`Cache hit for ${key}`);
 		res.send(cacheResponse);
 	} else {

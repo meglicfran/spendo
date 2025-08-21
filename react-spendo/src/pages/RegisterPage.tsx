@@ -15,8 +15,6 @@ const RegisterPage: React.FC = () => {
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		// TODO: Add API call or validation logic
-		console.log("Registering:", form);
 	};
 
 	return (
@@ -68,7 +66,10 @@ const RegisterPage: React.FC = () => {
 						<div>
 							<button
 								type="submit"
-								className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+								disabled
+								className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 
+            								disabled:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed 
+            								focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 							>
 								Sign up
 							</button>

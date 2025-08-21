@@ -20,7 +20,7 @@ export const getAccountMetadata = async (req: Request, res: Response) => {
 		return res.status(response.status).json(data);
 	} catch (err) {
 		console.error(err);
-		return res.status(500).send("Internal server error");
+		return res.status(500).json({ summary: "Internal server error" });
 	}
 };
 
@@ -43,6 +43,6 @@ export const getAccountTransactions = async (req: Request, res: Response) => {
 		return res.status(response.status).json(data);
 	} catch (err) {
 		console.error(err);
-		return res.status(500).send("Internal server error");
+		return res.status(500).json({ summary: "Internal server error" });
 	}
 };

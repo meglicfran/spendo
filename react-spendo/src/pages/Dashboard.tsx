@@ -32,12 +32,12 @@ function Dashboard() {
 			method: "GET",
 		};
 		const response = await fetch(BASE_URL + accountTransactionsUrl, options);
+		const data = await response.json();
 		if (!response.ok) {
-			alert(`Error fetching account status = ${response.status}`);
+			alert(data.summary);
 			return;
 		}
 
-		const data = await response.json();
 		const newTransactions = (data.transactions.booked as Array<any>).map((value) => {
 			const transaction: Transaction = {
 				transactionId: value.transactionId,

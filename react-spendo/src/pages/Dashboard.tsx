@@ -20,35 +20,42 @@ function Dashboard() {
 	const dateFrom = useRef<HTMLInputElement>(null);
 	const dateTo = useRef<HTMLInputElement>(null);
 
+	const [loading, setLoading] = useState(false);
 	const [transactions, updateTransactions] = useState<Transaction[]>([]);
 	const [dateRange, updateDateRange] = useState<String[]>(["2025-07-01", "2025-07-31"]);
 
 	const sendRequest = async () => {
+		setLoading(true);
 		const date_from = dateRange[0];
 		const date_to = dateRange[1];
 
 		const accountTransactionsUrl = `/accounts/${params.accountId}/transactions/?date_from=${date_from}&date_to=${date_to}`;
 		const options: RequestInit = {
 			method: "GET",
+			credentials: "include",
 		};
-		const response = await fetch(BASE_URL + accountTransactionsUrl, options);
-		const data = await response.json();
-		if (!response.ok) {
-			alert(data.summary);
-			return;
-		}
+		try {
+			const response = await fetch(BASE_URL + accountTransactionsUrl, options);
+			const data = await response.json();
+			if (!response.ok) {
+				alert(data.summary);
+				return;
+			}
 
-		const newTransactions = (data.transactions.booked as Array<any>).map((value) => {
-			const transaction: Transaction = {
-				transactionId: value.transactionId,
-				date: value.bookingDate,
-				description: value.remittanceInformationUnstructured,
-				amount: Number(value.transactionAmount.amount),
-				currency: value.transactionAmount.currency,
-			};
-			return transaction;
-		});
-		updateTransactions(newTransactions);
+			const newTransactions = (data.transactions.booked as Array<any>).map((value) => {
+				const transaction: Transaction = {
+					transactionId: value.transactionId,
+					date: value.bookingDate,
+					description: value.remittanceInformationUnstructured,
+					amount: Number(value.transactionAmount.amount),
+					currency: value.transactionAmount.currency,
+				};
+				return transaction;
+			});
+			updateTransactions(newTransactions);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	useEffect(() => {
@@ -101,9 +108,12 @@ function Dashboard() {
 
 					<button
 						onClick={refreshHandler}
-						className="h-10 px-5 mt-5 bg-blue-600 text-white text-sm font-medium rounded shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+						disabled={loading}
+						className={`h-10 px-5 mt-5 text-sm font-medium rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+							loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"
+						}`}
 					>
-						Refresh
+						{loading ? "Loading..." : "Refresh"}
 					</button>
 				</div>
 

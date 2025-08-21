@@ -6,8 +6,6 @@ import session from "express-session";
 import institutionsRouter from "./routes/institutions";
 import { cacheHandler } from "./cache/nodeCache";
 import requisitionsRouter from "./routes/requisitions";
-import { sessionLogger } from "./middleware/sessionLogger";
-
 const cors = require("cors");
 
 const app = express();

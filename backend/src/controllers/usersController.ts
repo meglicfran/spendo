@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import client from "../database/db";
+import { hashPassword, verifyPassword } from "../utils/bcrypt";
 
 export const getUsers = async (req: Request, res: Response) => {
 	try {
-		const query = await client.query("Select * from users");
+		const query = await client.query("Select userId, username from users");
 		console.log(query.rows);
 		res.status(200).json(query.rows);
 	} catch (error) {
@@ -18,10 +19,10 @@ export const addUser = async (req: Request, res: Response) => {
 		const { username, password } = req.body;
 		if (username === undefined || password === undefined)
 			return res.status(400).json({ message: "Missing username or password" });
-
+		const hashed = await hashPassword(password);
 		const query = await client.query(`INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`, [
 			username,
-			password,
+			hashed,
 		]);
 		(req.session as any).user = query.rows[0].userid;
 		res.status(200).json({ message: query.rows[0] });
@@ -50,10 +51,10 @@ export const updateUser = async (req: Request, res: Response) => {
 		const { username, password } = req.body;
 		if (username === undefined || password === undefined)
 			return res.status(400).json({ message: "Missing username or password" });
-
+		const hashed = await hashPassword(password);
 		const query = await client.query(`Update users set username = $1, password = $2 where userId = $3`, [
 			username,
-			password,
+			hashed,
 			userId,
 		]);
 		res.status(200).json({ message: `User ${userId} updated` });
@@ -71,7 +72,8 @@ export const userLogin = async (req: Request, res: Response) => {
 			return res.status(400).json({ message: "Missing username or password" });
 
 		const query = await client.query(`Select * from users where username = $1`, [username]);
-		if (query.rowCount === 1 && query.rows[0].password === password) {
+		const isValid = await verifyPassword(password, query.rows[0].password);
+		if (query.rowCount === 1 && isValid) {
 			(req.session as any).user = query.rows[0].userid;
 			res.status(200).json({ message: "Login successful" });
 		} else {

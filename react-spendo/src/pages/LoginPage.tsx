@@ -33,7 +33,8 @@ const LoginPage: React.FC = () => {
 		};
 		const response = await fetch(BASE_URL + loginUrl, options);
 		if (!response.ok) {
-			console.log(`Error fetching account status = ${response.status}`);
+			const data = await response.json();
+			alert(data.message);
 			return;
 		} else {
 			localStorage.setItem("username", form.username);

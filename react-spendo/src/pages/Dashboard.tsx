@@ -22,7 +22,13 @@ function Dashboard() {
 
 	const [loading, setLoading] = useState(false);
 	const [transactions, updateTransactions] = useState<Transaction[]>([]);
-	const [dateRange, updateDateRange] = useState<String[]>(["2025-07-01", "2025-07-31"]);
+	const now = new Date();
+	const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(
+		2,
+		"0"
+	)}`;
+	const fristOfMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+	const [dateRange, updateDateRange] = useState<String[]>([fristOfMonth, today]);
 
 	const sendRequest = async () => {
 		setLoading(true);
@@ -78,7 +84,6 @@ function Dashboard() {
 		<>
 			<Nav />
 			<div className="space-y-10 p-6 max-w-7xl mx-auto">
-				{/* Date Range Selector */}
 				<div className="flex flex-wrap items-end gap-4 bg-white p-4 rounded-lg shadow border border-gray-200">
 					<div className="flex flex-col">
 						<label htmlFor="dateFrom" className="text-sm font-medium text-gray-700">
@@ -89,6 +94,7 @@ function Dashboard() {
 							id="dateFrom"
 							name="dateFrom"
 							ref={dateFrom}
+							defaultValue={fristOfMonth}
 							className="mt-1 border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
@@ -102,6 +108,7 @@ function Dashboard() {
 							id="dateTo"
 							name="dateTo"
 							ref={dateTo}
+							defaultValue={today}
 							className="mt-1 border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
@@ -117,7 +124,6 @@ function Dashboard() {
 					</button>
 				</div>
 
-				{/* Dashboard Content */}
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 					<div className="lg:col-span-1">
 						<TransactionSummary transactions={transactions} />

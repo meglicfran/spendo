@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import AccountList from "../components/AccountList";
 import Nav from "../components/Nav";
 import { Link } from "react-router-dom";
-
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "../main";
 
 function AccountsPage() {
 	const [accounts, updateAccounts] = useState([]);
@@ -15,11 +14,11 @@ function AccountsPage() {
 			credentials: "include",
 		};
 		const response = await fetch(BASE_URL + getAccountsUrl, options);
+		const data = await response.json();
 		if (!response.ok) {
-			console.log(`Error fetching account status = ${response.status}`);
+			alert(data.message);
 			return;
 		}
-		const data = await response.json();
 		updateAccounts(data);
 	};
 

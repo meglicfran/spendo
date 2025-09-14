@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import InstitutionsList from "../components/InstitutionsList";
 import Nav from "../components/Nav";
-
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "../main";
 
 function AddAccountPage() {
 	const [institutions, updateInstitutions] = useState([]);

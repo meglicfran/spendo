@@ -1,13 +1,12 @@
 import React, { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
+import { BASE_URL } from "../main";
 
 interface FormData {
 	username: string;
 	password: string;
 }
-
-const BASE_URL = "http://localhost:3000";
 
 const LoginPage: React.FC = () => {
 	const navigate = useNavigate();
@@ -20,8 +19,6 @@ const LoginPage: React.FC = () => {
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		// TODO: Add API call or validation logic
-		console.log("Logging in:", form);
 		const loginUrl = `/users/login`;
 		const options: RequestInit = {
 			method: "POST",
@@ -36,9 +33,11 @@ const LoginPage: React.FC = () => {
 		};
 		const response = await fetch(BASE_URL + loginUrl, options);
 		if (!response.ok) {
-			console.log(`Error fetching account status = ${response.status}`);
+			const data = await response.json();
+			alert(data.message);
 			return;
 		} else {
+			localStorage.setItem("username", form.username);
 			navigate("/accounts");
 		}
 	};

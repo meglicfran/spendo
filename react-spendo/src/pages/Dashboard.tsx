@@ -4,8 +4,7 @@ import TransactionSummary from "../components/TransacionSummary";
 import TopTransactions from "../components/TopTransactions";
 import { useParams } from "react-router-dom";
 import Nav from "../components/Nav";
-
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "../main";
 
 export interface Transaction {
 	transactionId: string;
@@ -21,35 +20,48 @@ function Dashboard() {
 	const dateFrom = useRef<HTMLInputElement>(null);
 	const dateTo = useRef<HTMLInputElement>(null);
 
+	const [loading, setLoading] = useState(false);
 	const [transactions, updateTransactions] = useState<Transaction[]>([]);
-	const [dateRange, updateDateRange] = useState<String[]>(["2025-07-01", "2025-07-31"]);
+	const now = new Date();
+	const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(
+		2,
+		"0"
+	)}`;
+	const fristOfMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+	const [dateRange, updateDateRange] = useState<String[]>([fristOfMonth, today]);
 
 	const sendRequest = async () => {
+		setLoading(true);
 		const date_from = dateRange[0];
 		const date_to = dateRange[1];
 
 		const accountTransactionsUrl = `/accounts/${params.accountId}/transactions/?date_from=${date_from}&date_to=${date_to}`;
 		const options: RequestInit = {
 			method: "GET",
+			credentials: "include",
 		};
-		const response = await fetch(BASE_URL + accountTransactionsUrl, options);
-		if (!response.ok) {
-			console.log(`Error fetching account status = ${response.status}`);
-			return;
-		}
+		try {
+			const response = await fetch(BASE_URL + accountTransactionsUrl, options);
+			const data = await response.json();
+			if (!response.ok) {
+				alert(data.summary);
+				return;
+			}
 
-		const data = await response.json();
-		const newTransactions = (data.transactions.booked as Array<any>).map((value) => {
-			const transaction: Transaction = {
-				transactionId: value.transactionId,
-				date: value.bookingDate,
-				description: value.remittanceInformationUnstructured,
-				amount: Number(value.transactionAmount.amount),
-				currency: value.transactionAmount.currency,
-			};
-			return transaction;
-		});
-		updateTransactions(newTransactions);
+			const newTransactions = (data.transactions.booked as Array<any>).map((value) => {
+				const transaction: Transaction = {
+					transactionId: value.transactionId,
+					date: value.bookingDate,
+					description: value.remittanceInformationUnstructured,
+					amount: Number(value.transactionAmount.amount),
+					currency: value.transactionAmount.currency,
+				};
+				return transaction;
+			});
+			updateTransactions(newTransactions);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	useEffect(() => {
@@ -72,7 +84,6 @@ function Dashboard() {
 		<>
 			<Nav />
 			<div className="space-y-10 p-6 max-w-7xl mx-auto">
-				{/* Date Range Selector */}
 				<div className="flex flex-wrap items-end gap-4 bg-white p-4 rounded-lg shadow border border-gray-200">
 					<div className="flex flex-col">
 						<label htmlFor="dateFrom" className="text-sm font-medium text-gray-700">
@@ -83,6 +94,7 @@ function Dashboard() {
 							id="dateFrom"
 							name="dateFrom"
 							ref={dateFrom}
+							defaultValue={fristOfMonth}
 							className="mt-1 border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
@@ -96,19 +108,22 @@ function Dashboard() {
 							id="dateTo"
 							name="dateTo"
 							ref={dateTo}
+							defaultValue={today}
 							className="mt-1 border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
 
 					<button
 						onClick={refreshHandler}
-						className="h-10 px-5 mt-5 bg-blue-600 text-white text-sm font-medium rounded shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+						disabled={loading}
+						className={`h-10 px-5 mt-5 text-sm font-medium rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+							loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"
+						}`}
 					>
-						Refresh
+						{loading ? "Loading..." : "Refresh"}
 					</button>
 				</div>
 
-				{/* Dashboard Content */}
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 					<div className="lg:col-span-1">
 						<TransactionSummary transactions={transactions} />

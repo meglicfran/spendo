@@ -11,7 +11,7 @@ const app = express();
 const port = 3000;
 
 const corsOptions = {
-	origin: "https://react-spendo.vercel.app",
+	origin: "https://spendo-delta.vercel.app/login",
 	credentials: true,
 };
 

@@ -22,4 +22,9 @@ export const config = {
 		(() => {
 			throw new Error("DB_USER not set");
 		})(),
+	DB_URL:
+		process.env.DB_URL ??
+		(() => {
+			throw new Error("DB_URL not set");
+		})(),
 };

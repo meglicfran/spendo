@@ -4,7 +4,6 @@ import { logger } from "./middleware/logger";
 import userRoutes from "./routes/users";
 import session from "express-session";
 import institutionsRouter from "./routes/institutions";
-import { cacheHandler } from "./cache/nodeCache";
 import requisitionsRouter from "./routes/requisitions";
 const cors = require("cors");
 

@@ -5,6 +5,7 @@ import userRoutes from "./routes/users";
 import session from "express-session";
 import institutionsRouter from "./routes/institutions";
 import requisitionsRouter from "./routes/requisitions";
+import { initRedis } from "./cache/nodeCache";
 const cors = require("cors");
 
 const app = express();
@@ -14,6 +15,8 @@ const corsOptions = {
 	origin: "https://spendo-delta.vercel.app",
 	credentials: true,
 };
+
+initRedis();
 
 app.use(cors(corsOptions));
 app.use(express.json());

@@ -4,7 +4,7 @@ import { cacheHandler } from "../cache/nodeCache";
 
 const accountsRoutes = express.Router();
 
-//accountsRoutes.use("/:accountId", cacheHandler);
+accountsRoutes.use("/:accountId", cacheHandler);
 accountsRoutes.get("/:accountId", getAccountMetadata);
 accountsRoutes.get("/:accountId/transactions/", getAccountTransactions);
 

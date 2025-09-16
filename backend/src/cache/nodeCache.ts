@@ -1,17 +1,26 @@
-import { FlatCache } from "flat-cache";
 import { NextFunction, Request, Response } from "express";
-import path from "path";
+import { createClient } from "redis";
+import { config } from "../config/config";
 import client from "../database/db";
 
-const cache = new FlatCache({
-	ttl: 60000 * 60 * 24, //24 hours
-	lruSize: 10000,
-	expirationInterval: 60000 * 5,
-	persistInterval: 60000,
-	cacheDir: "./__cache__",
+const TTL = 60 * 60 * 24; // 24h
+
+const redis = createClient({
+	username: "default",
+	password: config.REDIS_PASS,
+	socket: {
+		host: "redis-12403.c338.eu-west-2-1.ec2.redns.redis-cloud.com",
+		port: 12403,
+	},
 });
 
-cache.load("cache1");
+redis.on("error", (err) => console.log("Redis Client Error", err));
+
+export const initRedis = async () => {
+	if (!redis.isOpen) {
+		await redis.connect();
+	}
+};
 
 export const cacheHandler = async (req: Request, res: Response, next: NextFunction) => {
 	if (req.method !== "GET") {
@@ -24,7 +33,7 @@ export const cacheHandler = async (req: Request, res: Response, next: NextFuncti
 		console.error("Cannot cache /users/accounts");
 		return next();
 	}
-	const cacheResponse = cache.get(key);
+	const cacheResponse = await redis.get(key);
 
 	if (cacheResponse) {
 		if ((req.session as any).user === undefined) return res.status(401).json({ summary: "Unauthorized" });
@@ -39,15 +48,14 @@ export const cacheHandler = async (req: Request, res: Response, next: NextFuncti
 			if (query.rowCount == 0) return res.status(401).json({ summary: "Unauthorized" });
 		}
 		console.log(`Cache hit for ${key}`);
-		res.send(cacheResponse);
+		res.send(JSON.parse(cacheResponse));
 	} else {
 		console.log(`Cache miss for ${key}`);
 		const originalJson = res.json.bind(res);
 		res.json = (body: any) => {
 			if (res.statusCode === 200) {
 				console.log(`Cache saved for ${key}`);
-				cache.set(key, body);
-				cache.save();
+				redis.setEx(key, TTL, JSON.stringify(body));
 			}
 			return originalJson(body);
 		};

@@ -27,4 +27,9 @@ export const config = {
 		(() => {
 			throw new Error("DB_URL not set");
 		})(),
+	REDIS_PASS:
+		process.env.REDIS_PASS ??
+		(() => {
+			throw new Error("REDIS_PASS not set");
+		})(),
 };

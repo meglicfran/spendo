@@ -2,10 +2,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const config = {
-	ACCESS_TOKEN:
-		process.env.ACCESS_TOKEN ??
+	SECRET_KEY:
+		process.env.SECRET_KEY ??
 		(() => {
-			throw new Error("ACCESS_TOKEN not set");
+			throw new Error("SECRET_KEY not set");
+		})(),
+	SECRET_ID:
+		process.env.SECRET_ID ??
+		(() => {
+			throw new Error("SECRET_ID not set");
 		})(),
 	BASE_URL:
 		process.env.BASE_URL ??

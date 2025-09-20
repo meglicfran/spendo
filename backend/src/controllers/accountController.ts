@@ -1,16 +1,22 @@
 import { Request, Response } from "express";
 import { config } from "../config/config";
 import client from "../database/db";
+import { getValidAccessToken } from "../service/TokenService";
 
 export const getAccountMetadata = async (req: Request, res: Response) => {
 	try {
 		const { accountId } = req.params;
+		const accessToken = await getValidAccessToken();
+		if (accessToken === null) {
+			console.error("Invalid access token");
+			return res.status(500).json({ summary: "Internal server error" });
+		}
 
 		const accountMetadataUrl = `/api/v2/accounts/${accountId}/`;
 		const options: RequestInit = {
 			method: "GET",
 			headers: {
-				Authorization: `Bearer ${config.ACCESS_TOKEN}`,
+				Authorization: `Bearer ${accessToken}`,
 				"Content-Type": "application/json",
 			},
 		};
@@ -31,6 +37,11 @@ export const getAccountTransactions = async (req: Request, res: Response) => {
 		const { accountId } = req.params;
 		const date_from = req.query.date_from as string;
 		const date_to = req.query.date_to as string;
+		const accessToken = await getValidAccessToken();
+		if (accessToken === null) {
+			console.error("Invalid access token");
+			return res.status(500).json({ summary: "Internal server error" });
+		}
 
 		const query = await client.query("select * from accounts where userId=$1 and accountId=$2", [
 			userId,
@@ -42,7 +53,7 @@ export const getAccountTransactions = async (req: Request, res: Response) => {
 		const options: RequestInit = {
 			method: "GET",
 			headers: {
-				Authorization: `Bearer ${config.ACCESS_TOKEN}`,
+				Authorization: `Bearer ${accessToken}`,
 				"Content-Type": "application/json",
 			},
 		};

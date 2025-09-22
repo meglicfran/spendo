@@ -32,9 +32,9 @@ const getAccessToken = async (): Promise<AccessToken | null> => {
 
 		return {
 			access_token: query.rows[0].access_token,
-			access_expires: query.rows[0].access_expires,
+			access_expires: new Date(query.rows[0].access_expires),
 			refresh_token: query.rows[0].refresh_token,
-			refresh_expires: query.rows[0].refresh_token,
+			refresh_expires: new Date(query.rows[0].refresh_token),
 			id: query.rows[0].id,
 		};
 	} catch (err) {

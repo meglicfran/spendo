@@ -1,12 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../main";
+import { useUserContext } from "./UserContextProvider";
 
 function Nav() {
 	const navigate = useNavigate();
+	const userContext = useUserContext();
 
 	const logout = async () => {
-		console.log(localStorage.getItem("username"));
-		localStorage.removeItem("username");
+		userContext.setUser(null);
+
 		const logoutUrl = `/users/logout`;
 		const options: RequestInit = {
 			method: "POST",
@@ -19,6 +21,10 @@ function Nav() {
 		if (!response.ok) {
 			console.log(`Error logging out = ${response.status}`);
 			alert(`Error logging out = ${response.status}`);
+			if (response.status === 401) {
+				userContext.setUser(null);
+				navigate("/login");
+			}
 			return;
 		} else {
 			navigate("/login");
@@ -28,9 +34,9 @@ function Nav() {
 	return (
 		<nav className="bg-white shadow-md px-6 py-4">
 			<ul className="flex space-x-6 text-gray-700 font-medium">
-				{localStorage.getItem("username") && (
+				{userContext.user && (
 					<>
-						<li>{localStorage.getItem("username")}</li>
+						<li>{userContext.user.username}</li>
 						<li>
 							<Link to="/accounts" className="hover:text-blue-600 transition-colors duration-200">
 								Accounts
@@ -45,7 +51,7 @@ function Nav() {
 					</>
 				)}
 
-				{!localStorage.getItem("username") && (
+				{!userContext.user && (
 					<>
 						<li>
 							<Link to="/login" className="hover:text-blue-600 transition-colors duration-200">

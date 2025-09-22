@@ -2,6 +2,7 @@ import React, { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
 import { BASE_URL } from "../main";
+import { useUserContext } from "../components/UserContextProvider";
 
 interface FormData {
 	username: string;
@@ -10,6 +11,7 @@ interface FormData {
 
 const LoginPage: React.FC = () => {
 	const navigate = useNavigate();
+	const userContext = useUserContext();
 
 	const [form, setForm] = useState<FormData>({ username: "", password: "" });
 
@@ -35,9 +37,14 @@ const LoginPage: React.FC = () => {
 		if (!response.ok) {
 			const data = await response.json();
 			alert(data.message);
+			if (response.status === 401) {
+				userContext.setUser(null);
+				navigate("/login");
+			}
 			return;
 		} else {
-			localStorage.setItem("username", form.username);
+			const data = await response.json();
+			userContext.setUser({ username: data.username, id: 0 });
 			navigate("/accounts");
 		}
 	};

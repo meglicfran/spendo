@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../main";
+import { useUserContext } from "./UserContextProvider";
 
 interface Prop {
 	institutions: any[];
@@ -24,6 +26,10 @@ function InstitutionsList({ institutions }: Prop) {
 		const response = await fetch(BASE_URL + createRequisitionUrl, options);
 		if (!response.ok) {
 			console.log(`Error fetching account status = ${response.status}`);
+			if (response.status === 401) {
+				useUserContext().setUser(null);
+				useNavigate()("/login");
+			}
 			return;
 		}
 		const data = await response.json();

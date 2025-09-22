@@ -2,9 +2,14 @@ import { useEffect, useState } from "react";
 import InstitutionsList from "../components/InstitutionsList";
 import Nav from "../components/Nav";
 import { BASE_URL } from "../main";
+import { useUserContext } from "../components/UserContextProvider";
+import { useNavigate } from "react-router-dom";
 
 function AddAccountPage() {
 	const [institutions, updateInstitutions] = useState([]);
+
+	const navigate = useNavigate();
+	const userContext = useUserContext();
 
 	const fetchInstitutions = async () => {
 		const getInstitutionsUrl = "/institutions/?country=HR";
@@ -15,6 +20,10 @@ function AddAccountPage() {
 		const response = await fetch(BASE_URL + getInstitutionsUrl, options);
 		if (!response.ok) {
 			console.log(`Error fetching account status = ${response.status}`);
+			if (response.status === 401) {
+				userContext.setUser(null);
+				navigate("/login");
+			}
 			return;
 		}
 		const data = await response.json();

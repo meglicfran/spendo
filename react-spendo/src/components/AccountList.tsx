@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../main";
+import { useUserContext } from "./UserContextProvider";
 
 export interface Account {
 	accountid: string;
@@ -13,6 +14,7 @@ interface AccountsProp {
 
 function AccountList({ accounts }: AccountsProp) {
 	const navigate = useNavigate();
+	const userContext = useUserContext();
 
 	const accountClicked = (accountId: string) => {
 		navigate("/account/" + accountId);
@@ -34,6 +36,10 @@ function AccountList({ accounts }: AccountsProp) {
 		const response = await fetch(BASE_URL + deleteAccountUrl, options);
 		if (!response.ok) {
 			alert(`Error fetching account status = ${response.status}`);
+			if (response.status === 401) {
+				userContext.setUser(null);
+				navigate("/login");
+			}
 			return;
 		}
 		alert("account deleted");

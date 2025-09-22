@@ -9,8 +9,10 @@ import LoginPage from "./pages/LoginPage.tsx";
 import Nav from "./components/Nav.tsx";
 import AddAccountPage from "./pages/AddAccountPage.tsx";
 import AccountsAddedPage from "./pages/AccountsAddedPage.tsx";
+import { UserContextProvider } from "./components/UserContextProvider.tsx";
 
 export const BASE_URL = "https://spendo-backend.onrender.com";
+// export const BASE_URL = "http://localhost:3000";
 
 const router = createBrowserRouter([
 	{
@@ -45,6 +47,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<RouterProvider router={router} />
+		<UserContextProvider>
+			<RouterProvider router={router} />
+		</UserContextProvider>
 	</StrictMode>
 );

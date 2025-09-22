@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import Transactions from "../components/Transactions";
 import TransactionSummary from "../components/TransacionSummary";
 import TopTransactions from "../components/TopTransactions";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Nav from "../components/Nav";
 import { BASE_URL } from "../main";
+import { useUserContext } from "../components/UserContextProvider";
 
 export interface Transaction {
 	transactionId: string;
@@ -15,6 +16,9 @@ export interface Transaction {
 }
 
 function Dashboard() {
+	const navigate = useNavigate();
+	const userContext = useUserContext();
+
 	const params = useParams();
 
 	const dateFrom = useRef<HTMLInputElement>(null);
@@ -45,6 +49,10 @@ function Dashboard() {
 			const data = await response.json();
 			if (!response.ok) {
 				alert(data.summary);
+				if (response.status === 401) {
+					userContext.setUser(null);
+					navigate("/login");
+				}
 				return;
 			}
 

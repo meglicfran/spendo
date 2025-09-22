@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import AccountList from "../components/AccountList";
 import Nav from "../components/Nav";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../main";
+import { useUserContext } from "../components/UserContextProvider";
 
 function AccountsPage() {
 	const [accounts, updateAccounts] = useState([]);
+
+	const navigate = useNavigate();
+	const userContext = useUserContext();
 
 	const fetchAccounts = async () => {
 		const getAccountsUrl = `/users/accounts`;
@@ -17,6 +21,10 @@ function AccountsPage() {
 		const data = await response.json();
 		if (!response.ok) {
 			alert(data.message);
+			if (response.status === 401) {
+				userContext.setUser(null);
+				navigate("/login");
+			}
 			return;
 		}
 		updateAccounts(data);

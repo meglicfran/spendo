@@ -1,59 +1,67 @@
 import { Request, Response } from "express";
 import { config } from "../config/config";
-import { isToday } from "../utils/utils";
-import path from "path";
-
-const accountMetadataPath = path.join(__dirname, "../__cache__/accountMetadata.json");
-const accountTransactionsPath = path.join(__dirname, "../__cache__/accountTransactions.json");
+import client from "../database/db";
+import { getValidAccessToken } from "../service/TokenService";
 
 export const getAccountMetadata = async (req: Request, res: Response) => {
 	try {
-		const { id } = req.params;
+		const { accountId } = req.params;
+		const accessToken = await getValidAccessToken();
+		if (accessToken === null) {
+			console.error("Invalid access token");
+			return res.status(500).json({ summary: "Internal server error" });
+		}
 
-		const accountMetadataUrl = `/api/v2/accounts/${id}/`;
+		const accountMetadataUrl = `/api/v2/accounts/${accountId}/`;
 		const options: RequestInit = {
 			method: "GET",
 			headers: {
-				Authorization: `Bearer ${config.ACCESS_TOKEN}`,
+				Authorization: `Bearer ${accessToken}`,
 				"Content-Type": "application/json",
 			},
 		};
 		const response = await fetch(config.BASE_URL + accountMetadataUrl, options);
-		if (!response.ok) {
-			return res.status(response.status).send("Error fetching account metadata.");
-		}
-
 		const data = await response.json();
-		return res.status(200).json(data);
+		return res.status(response.status).json(data);
 	} catch (err) {
 		console.error(err);
-		return res.status(500).send("Internal server error");
+		return res.status(500).json({ summary: "Internal server error" });
 	}
 };
 
 export const getAccountTransactions = async (req: Request, res: Response) => {
 	try {
-		const { id } = req.params;
+		if ((req.session as any).user === undefined) return res.status(401).json({ summary: "Unauthorized" });
+
+		const userId = (req.session as any).user;
+		const { accountId } = req.params;
 		const date_from = req.query.date_from as string;
 		const date_to = req.query.date_to as string;
+		const accessToken = await getValidAccessToken();
+		if (accessToken === null) {
+			console.error("Invalid access token");
+			return res.status(500).json({ summary: "Internal server error" });
+		}
 
-		const accountTransactionsUrl = `/api/v2/accounts/${id}/transactions/?date_from=${date_from}&date_to=${date_to}`;
+		const query = await client.query("select * from accounts where userId=$1 and accountId=$2", [
+			userId,
+			accountId,
+		]);
+		if (query.rowCount == 0) return res.status(401).json({ summary: "Unauthorized" });
+
+		const accountTransactionsUrl = `/api/v2/accounts/${accountId}/transactions/?date_from=${date_from}&date_to=${date_to}`;
 		const options: RequestInit = {
 			method: "GET",
 			headers: {
-				Authorization: `Bearer ${config.ACCESS_TOKEN}`,
+				Authorization: `Bearer ${accessToken}`,
 				"Content-Type": "application/json",
 			},
 		};
 		const response = await fetch(config.BASE_URL + accountTransactionsUrl, options);
-		if (!response.ok) {
-			return res.status(response.status).send("Error fetching account metadata.");
-		}
-
 		const data = await response.json();
-		return res.status(200).json(data);
+		return res.status(response.status).json(data);
 	} catch (err) {
 		console.error(err);
-		return res.status(500).send("Internal server error");
+		return res.status(500).json({ summary: "Internal server error" });
 	}
 };

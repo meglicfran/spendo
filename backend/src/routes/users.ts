@@ -8,6 +8,7 @@ import {
 	userLogin,
 	addUserAccount,
 	deleteUserAccount,
+	userLogout,
 } from "../controllers/usersController";
 
 const userRoutes = express.Router();
@@ -17,6 +18,7 @@ userRoutes.post("/post", addUser);
 userRoutes.delete("/delete/:userId", deleteUser);
 userRoutes.put("/put/:userId", updateUser);
 userRoutes.post("/login", userLogin);
+userRoutes.post("/logout", userLogout);
 userRoutes.get("/accounts", getUserAccounts);
 userRoutes.post("/accounts", addUserAccount);
 userRoutes.delete("/accounts", deleteUserAccount);

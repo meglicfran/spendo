@@ -4,24 +4,26 @@ import { logger } from "./middleware/logger";
 import userRoutes from "./routes/users";
 import session from "express-session";
 import institutionsRouter from "./routes/institutions";
-import { cacheHandler } from "./cache/nodeCache";
 import requisitionsRouter from "./routes/requisitions";
-
+import { initRedis } from "./cache/nodeCache";
 const cors = require("cors");
 
 const app = express();
 const port = 3000;
 
 const corsOptions = {
-	origin: "http://localhost:5173",
+	origin: "https://spendo-delta.vercel.app",
 	credentials: true,
 };
+
+initRedis();
 
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(logger);
 app.use(
 	session({
+		name: "sId",
 		secret: `idegas`,
 		saveUninitialized: false,
 		resave: false,
@@ -31,7 +33,6 @@ app.use(
 		},
 	})
 );
-app.use(cacheHandler);
 
 app.get("/", (req, res) => {
 	res.send("Hello from TypeScript backend!");

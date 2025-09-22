@@ -66,7 +66,13 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const userLogin = async (req: Request, res: Response) => {
 	try {
-		if ((req.session as any).user !== undefined) return res.status(200).json({ message: "Already logged in" });
+		const sessionUserId = (req.session as any).user;
+		if (sessionUserId !== undefined) {
+			const query = await client.query(`Select * from users where userId = $1`, [sessionUserId]);
+			res.status(200).json({ username: query.rows[0].username, id: query.rows[0].userid });
+			return;
+		}
+
 		const { username, password } = req.body;
 		if (username === undefined || password === undefined)
 			return res.status(400).json({ message: "Missing username or password" });
@@ -75,7 +81,7 @@ export const userLogin = async (req: Request, res: Response) => {
 		const isValid = await verifyPassword(password, query.rows[0].password);
 		if (query.rowCount === 1 && isValid) {
 			(req.session as any).user = query.rows[0].userid;
-			res.status(200).json({ message: "Login successful" });
+			res.status(200).json({ username: query.rows[0].username, id: query.rows[0].userid });
 		} else {
 			res.status(401).json({ message: "Wrong username or password" });
 		}

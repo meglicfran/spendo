@@ -78,6 +78,9 @@ export const userLogin = async (req: Request, res: Response) => {
 			return res.status(400).json({ message: "Missing username or password" });
 
 		const query = await client.query(`Select * from users where username = $1`, [username]);
+		if(query.rowCount === 0) {
+			res.status(401).json({ message: "Wrong username or password" });
+		}
 		const isValid = await verifyPassword(password, query.rows[0].password);
 		if (query.rowCount === 1 && isValid) {
 			(req.session as any).user = query.rows[0].userid;

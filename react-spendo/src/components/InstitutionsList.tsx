@@ -18,7 +18,7 @@ function InstitutionsList({ institutions }: Prop) {
 			credentials: "include",
 			body: JSON.stringify({
 				institution_id: institution.id,
-				redirect: "http://localhost:5173/added/",
+				redirect: "https://spendo-delta.vercel.app/added/",
 				account_selection: false,
 				redirect_immediate: false,
 			}),

@@ -9,6 +9,7 @@ interface Prop {
 function InstitutionsList({ institutions }: Prop) {
 	const handleClick = async (institution: any) => {
 		console.log(institution);
+		const redirectBaseUrl = window.location.origin;
 		const createRequisitionUrl = "/requisitions";
 		const options: RequestInit = {
 			method: "POST",
@@ -18,7 +19,7 @@ function InstitutionsList({ institutions }: Prop) {
 			credentials: "include",
 			body: JSON.stringify({
 				institution_id: institution.id,
-				redirect: "https://spendo-delta.vercel.app/added/",
+				redirect: `${redirectBaseUrl}/added`,
 				account_selection: false,
 				redirect_immediate: false,
 			}),

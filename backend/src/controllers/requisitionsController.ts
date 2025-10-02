@@ -7,7 +7,7 @@ export const createRequisitions = async (req: Request, res: Response) => {
 		const accessToken = await getValidAccessToken();
 		if (accessToken === null) {
 			console.error("Invalid access token");
-			return res.status(500).json({ summary: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 		const createRequisitionUrl = `/api/v2/requisitions/`;
 		const options: RequestInit = {
@@ -33,7 +33,7 @@ export const getRequisitionById = async (req: Request, res: Response) => {
 		const accessToken = await getValidAccessToken();
 		if (accessToken === null) {
 			console.error("Invalid access token");
-			return res.status(500).json({ summary: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 		const { requisitionId } = req.params;
 		const getRequisitionByIdUrl = `/api/v2/requisitions/${requisitionId}`;
@@ -59,7 +59,7 @@ export const getCompanyRequisitions= async (req: Request, res: Response) => {
 		const accessToken = await getValidAccessToken();
 		if (accessToken === null) {
 			console.error("Invalid access token");
-			return res.status(500).json({ summary: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 		const getRequisitionByIdUrl = `/api/v2/requisitions/`;
 		const options: RequestInit = {
@@ -84,7 +84,7 @@ export const deleteRequisition = async (req: Request, res: Response) => {
 		const accessToken = await getValidAccessToken();
 		if (accessToken === null) {
 			console.error("Invalid access token");
-			return res.status(500).json({ summary: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 		const { requisitionId } = req.params;
 		const getRequisitionByIdUrl = `/api/v2/requisitions/${requisitionId}`;

@@ -10,9 +10,11 @@ import Nav from "./components/Nav.tsx";
 import AddAccountPage from "./pages/AddAccountPage.tsx";
 import AccountsAddedPage from "./pages/AccountsAddedPage.tsx";
 import { UserContextProvider } from "./components/UserContextProvider.tsx";
+import RequisitionsPage from "./pages/RequisitionsPage.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 export const BASE_URL = "https://spendo-backend.onrender.com";
-// export const BASE_URL = "http://localhost:3000";
+//export const BASE_URL = "http://localhost:3000";
 
 const router = createBrowserRouter([
 	{
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
 	{
 		path: "/added",
 		element: <AccountsAddedPage />,
+	},
+	{
+		path: "/requisitions",
+		element: <ProtectedRoute><RequisitionsPage /></ProtectedRoute>
 	},
 ]);
 

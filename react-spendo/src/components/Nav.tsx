@@ -42,6 +42,13 @@ function Nav() {
 								Accounts
 							</Link>
 						</li>
+						{userContext.user.isAdmin && (
+							<li>
+								<Link to="/requisitions" className="hover:text-blue-600 transition-colors duration-200">
+									Requisitions
+								</Link>
+							</li>
+						)}
 						<li
 							className="hover:text-blue-600 transition-colors duration-200 hover:cursor-pointer"
 							onClick={logout}

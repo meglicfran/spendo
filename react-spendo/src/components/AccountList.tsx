@@ -21,7 +21,6 @@ function AccountList({ accounts }: AccountsProp) {
 	};
 
 	const handleDelete = async (accountId: string) => {
-		console.log(accountId);
 		const deleteAccountUrl = `/users/accounts`;
 		const options: RequestInit = {
 			method: "DELETE",

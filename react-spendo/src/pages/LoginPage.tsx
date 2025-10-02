@@ -44,7 +44,7 @@ const LoginPage: React.FC = () => {
 			return;
 		} else {
 			const data = await response.json();
-			userContext.setUser({ username: data.username, id: 0 });
+			userContext.setUser({ username: data.username, id: data.id, isAdmin: data.id===2 });
 			navigate("/accounts");
 		}
 	};

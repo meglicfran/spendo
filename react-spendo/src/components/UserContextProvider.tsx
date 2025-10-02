@@ -4,6 +4,7 @@ import { BASE_URL } from "../main";
 export interface User {
 	username: string;
 	id: number;
+	isAdmin: boolean;
 }
 
 export interface UserContextType {
@@ -43,6 +44,7 @@ export function UserContextProvider({ children }: { children: ReactNode }) {
 					setUser({
 						username: data.username,
 						id: data.id,
+						isAdmin: data.id===2,
 					});
 				});
 			} else {

@@ -42,7 +42,6 @@ function AccountsAddedPage() {
 	};
 
 	const fetchAccounts = async () => {
-		console.log(searchParams.get("ref"));
 		const getRequisitionByIdUrl = `/requisitions/${searchParams.get("ref")}`;
 		const options: RequestInit = {
 			method: "GET",

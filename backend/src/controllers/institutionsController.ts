@@ -4,6 +4,17 @@ import { getValidAccessToken } from "../service/TokenService";
 
 export const getInstitutionsByCountry = async (req: Request, res: Response) => {
 	try {
+    	const sessionUserId = (req.session as any).user;
+		if(sessionUserId===15){
+			const guestData = []
+			guestData.push({
+				id: "SANDBOXFINANCE_SFIN0000",
+				name: "Sandbox finance",
+				logo: "https://cdn-logos.gocardless.com/ais/SANDBOXFINANCE_SFIN0000.png"
+			})
+			return res.status(200).json(guestData);
+		}
+		
 		const country = req.query.country as string;
 		const accessToken = await getValidAccessToken();
 		if (accessToken === null) {
@@ -25,6 +36,11 @@ export const getInstitutionsByCountry = async (req: Request, res: Response) => {
 		}
 
 		const data = await response.json();
+		data.push({
+			id: "SANDBOXFINANCE_SFIN0000",
+			name: "Sandbox finance",
+			logo: "https://cdn-logos.gocardless.com/ais/SANDBOXFINANCE_SFIN0000.png"
+		})
 		return res.status(200).json(data);
 	} catch (err) {
 		console.error(err);

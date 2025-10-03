@@ -5,6 +5,7 @@ import { getValidAccessToken } from "../service/TokenService";
 
 export const getAccountMetadata = async (req: Request, res: Response) => {
 	try {
+		if ((req.session as any).user === undefined) return res.status(401).json({ summary: "Not logged in" });
 		const { accountId } = req.params;
 		const accessToken = await getValidAccessToken();
 		if (accessToken === null) {

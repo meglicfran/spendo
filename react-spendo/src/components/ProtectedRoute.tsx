@@ -3,7 +3,7 @@ import { useUserContext } from "./UserContextProvider";
 import { Navigate } from "react-router-dom";
 type ProtectedRouteProps = PropsWithChildren;
 
-export default function ProtectedRoute({children} : ProtectedRouteProps){
+export  function ProtectedRoute({children} : ProtectedRouteProps){
     const userContext = useUserContext();
 
     if (userContext.user === null) {
@@ -12,7 +12,7 @@ export default function ProtectedRoute({children} : ProtectedRouteProps){
     return children;
 }
 
-export function AdminProtectredRoute({children} : PropsWithChildren){
+export function AdminProtectedRoute({children} : PropsWithChildren){
     const userContext = useUserContext();
 
     if(userContext.user ===null) {
